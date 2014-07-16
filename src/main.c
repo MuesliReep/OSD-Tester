@@ -9,7 +9,6 @@
 #include "OSD.h"
 
 
-
 int8_t displayGrid[xres][yres];
 
 int main() {
