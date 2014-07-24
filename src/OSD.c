@@ -3,80 +3,48 @@
 #include <stdlib.h>
 
 #include "Config.h"
+#include "Telemetry.h"
 #include "OSD.h"
 #include "Graphics.h"
 
-void updateOSD(int8_t grid[][yres]) {
+
+void updateOSD(int8_t grid[][yres], struct TelemetryData data) {
     
     //Display craft attitude information
     drawAttitude(grid);
     
-    //showCompas();
+    
+    //showCompasRadar();
+    //showGPS
 }
 
 void drawAttitude(int8_t grid[][yres]) {
     
-    int thickness = 2;
+    int t = 2; //Thickness -> should be in user config
     
     //Draw craft center
-    drawPoint(xres/2,yres/2,thickness,grid);
+    drawPoint(xres/2,yres/2,t,grid);
 	//Left
-    setPixel(grid,xres/2-1,yres/2+2);
-    setPixel(grid,xres/2-1,yres/2+3);
-    setPixel(grid,xres/2-2,yres/2+2);
-    setPixel(grid,xres/2-2,yres/2+3);
-    
-    setPixel(grid,xres/2-3,yres/2+4);
-    setPixel(grid,xres/2-3,yres/2+5);
-    setPixel(grid,xres/2-4,yres/2+4);
-    setPixel(grid,xres/2-4,yres/2+5);
-    
-    setPixel(grid,xres/2-5,yres/2+2);
-    setPixel(grid,xres/2-5,yres/2+3);
-    setPixel(grid,xres/2-6,yres/2+2);
-    setPixel(grid,xres/2-6,yres/2+3);
-    
-    setPixel(grid,xres/2-7,yres/2);
-    setPixel(grid,xres/2-8,yres/2);
-    setPixel(grid,xres/2-7,yres/2+1);
-    setPixel(grid,xres/2-8,yres/2+1);
-    
-    setPixel(grid,xres/2-9,yres/2);
-    setPixel(grid,xres/2-10,yres/2);
-    setPixel(grid,xres/2-9,yres/2+1);
-    setPixel(grid,xres/2-10,yres/2+1);
+    drawPoint(xres/2-t,yres/2+t,t,grid);
+    drawPoint(xres/2-t*2,yres/2+t*2,t,grid);
+    drawPoint(xres/2-t*3,yres/2+t,t,grid);  
+    drawPoint(xres/2-t*4,yres/2,t,grid);
+    drawPoint(xres/2-t*5,yres/2,t,grid);
     
     //Right
-    setPixel(grid,xres/2+1,yres/2+2);
-    setPixel(grid,xres/2+1,yres/2+3);
-    setPixel(grid,xres/2+2,yres/2+2);
-    setPixel(grid,xres/2+2,yres/2+3);
-    
-    setPixel(grid,xres/2+3,yres/2+4);
-    setPixel(grid,xres/2+3,yres/2+5);
-    setPixel(grid,xres/2+4,yres/2+4);
-    setPixel(grid,xres/2+4,yres/2+5);
-    
-    setPixel(grid,xres/2+5,yres/2+2);
-    setPixel(grid,xres/2+5,yres/2+3);
-    setPixel(grid,xres/2+6,yres/2+2);
-    setPixel(grid,xres/2+6,yres/2+3);
-    
-    setPixel(grid,xres/2+7,yres/2);
-    setPixel(grid,xres/2+8,yres/2);
-    setPixel(grid,xres/2+7,yres/2+1);
-    setPixel(grid,xres/2+8,yres/2+1);
-    
-    setPixel(grid,xres/2+9,yres/2);
-    setPixel(grid,xres/2+10,yres/2);
-    setPixel(grid,xres/2+9,yres/2+1);
-    setPixel(grid,xres/2+10,yres/2+1);
+    drawPoint(xres/2+t,yres/2+t,t,grid);
+    drawPoint(xres/2+t*2,yres/2+t*2,t,grid);
+    drawPoint(xres/2+t*3,yres/2+t,t,grid);
+    drawPoint(xres/2+t*4,yres/2,t,grid);
+    drawPoint(xres/2+t*5,yres/2,t,grid);
+
     
 	//Draw horizon
 	plotLine(xres/2+13,yres/2,xres/2+33,yres/2,grid);
     plotLine(xres/2+13,yres/2+1,xres/2+33,yres/2,grid);
 	
 	//Draw positive steps
+    //Divide screen into 3 sections(there should always be 3 horizon lines on screen)
     
     //Draw negative steps
 }

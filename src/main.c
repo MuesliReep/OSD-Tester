@@ -4,9 +4,12 @@
 #include <string.h>
 
 #include "Config.h"
+#include "Telemetry.h"
 #include "output.h"
 #include "ArrayHelper.h"
+#include "DataStream.h"
 #include "OSD.h"
+
 
 
 int8_t displayGrid[xres][yres];
@@ -16,11 +19,19 @@ int main() {
     //Initialise array
     clearArray(displayGrid,sizeof(displayGrid));
     
-    //Initialise output device
+    //Initialise devices
     outputInitialise(1);
+    dataStreamInitialise(1);
+    
+    //Initialise data
+    struct TelemetryData telemetryData;
+    //TODO: Zero initial data here
+    zeroData(&telemetryData);
+    
+    //Grab latest data
 
     //OSD
-	updateOSD(displayGrid);
+	updateOSD(displayGrid, telemetryData);
 
 	//Display OSD to display device    
     outputGridToDisplay(displayGrid);

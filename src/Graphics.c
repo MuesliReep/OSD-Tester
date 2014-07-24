@@ -5,7 +5,9 @@
 #include "Config.h"
 #include "Graphics.h"
 
-void drawLine(int x, int y, int thickness, int angle, int8_t grid[][yres]){}
+void drawLine(int x, int y, int thickness, int angle, int8_t grid[][yres]){
+    //Should also calculate length
+}
 
 void drawPoint(int x, int y, int thickness,int8_t grid[][yres]) {
     
@@ -14,6 +16,7 @@ void drawPoint(int x, int y, int thickness,int8_t grid[][yres]) {
             setPixel(grid,ix,iy);
         }
     }
+    //TODO: out of bounds catch
 }
 
 //http://members.chello.at/~easyfilter/bresenham.html
