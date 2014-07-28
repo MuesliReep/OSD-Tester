@@ -2,6 +2,23 @@
 
 CC = gcc #TODO: ARM
 
+###
+###  CFLAGS
+###
+
+CFLAGS  = -std=c99
+
+CFLAGS += -Ilib/opencv/include/
+
+
+###
+###  Libs
+###
+
+LIBS  = -Llib/opencv/lib/
+LIBS += -lm
+LIBS += -lopencv_core -lopencv_imgproc -lopencv_highgui
+#LIBS += -lcv -lhighgui
 
 ###
 ###  Dirs & Files
@@ -9,11 +26,17 @@ CC = gcc #TODO: ARM
 
 SRCDIR = src
 BLDDIR = bld
+MKBLDDIR = @mkdir -p $(BLDDIR)
 BIN  = OSD-Tester
 ALLTARGETS = OSD-Tester
 
 SRC_FILES  = main.c
-#SRC_FILES += 
+SRC_FILES += output.c
+SRC_FILES += ArrayHelper.c
+SRC_FILES += DataStream.c
+SRC_FILES += OSD.c
+SRC_FILES += Graphics.c
+SRC_FILES += Telemetry.c
 
 ifndef V
   QUIET_CC   = @echo ' CC   ' $<;

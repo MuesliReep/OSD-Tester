@@ -1,18 +1,38 @@
-
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "Config.h"
 #include "Graphics.h"
 
-void drawLine(int x, int y, int thickness, int angle, int8_t grid[][yres]){
-    //Should also calculate length
+#define PI 3.14159265
+
+void drawLine(int x, int y, int thickness, int angle, int length, int8_t grid[][yres]){
+    //Calculate end points according to the angle and length. (Right angled triangle)
+    //
+    
+    int A = 0;
+    int B = 0;
+    int C = length;
+    int AB = 90;
+    int AC = 180-AB-angle;
+    int BC = angle;
+    
+    calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
+
+    plotLine(x,y,x+B,y-A,grid);
+    
+    //plotline: for loop for thickness
+    
+    //TODO: out of bounds catch
+    
 }
 
 void drawPoint(int x, int y, int thickness,int8_t grid[][yres]) {
     
-    for(int ix=0;ix<thickness;ix++) {
-        for(int iy=0;iy<thickness;iy++) {
+    for(int ix=x;ix<x+thickness;ix++) {
+        for(int iy=y;iy<y+thickness;iy++) {
             setPixel(grid,ix,iy);
         }
     }
@@ -39,3 +59,23 @@ void setPixel(int8_t grid[][yres], int x, int y) {
     //TODO: set pixel colour
 	grid[x][y]=1;
 }
+
+//Calculate two sides of a right angled traingle given one length and one angle
+void calcTriangleSides(int * A, int * B, int * C, int * AB, int * AC, int * BC) {
+    //A = overstaand, B = aanliggende, C = schuine
+    
+    // Sin(BC) = A / C
+    float sinBC = sinf((float)*BC*PI/180);
+    *A = *C / sinBC;
+    
+    // Cos(BC) = B / C
+	float cosBC = cosf((float)*BC*PI/180);
+    *B = *C /cosBC;
+    
+    //soscastoa hier
+    //http://www.wiskunde.net/sinus#.U9OZQ_l_uxb
+    //http://wetenschap.infonu.nl/wiskunde/84556-de-lengte-van-een-zijde-van-een-driehoek-berekenen.html
+}
+    
+    
+    

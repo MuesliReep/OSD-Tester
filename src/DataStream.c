@@ -7,3 +7,7 @@ int dataStreamInitialise(int device) {
     
     return 0;
 }
+
+int processStream() {
+    return 0;
+}

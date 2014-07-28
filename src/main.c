@@ -25,14 +25,15 @@ int main() {
     
     //Initialise data
     struct TelemetryData telemetryData;
-    //TODO: Zero initial data here
     zeroData(&telemetryData);
     
-    //Grab latest data
-
+    
+    //Grab latest data & convert it to TelemetryData
+	
+    
     //OSD
-	updateOSD(displayGrid, telemetryData);
-
+	updateOSD(displayGrid, &telemetryData);
+    
 	//Display OSD to display device    
     outputGridToDisplay(displayGrid);
     
