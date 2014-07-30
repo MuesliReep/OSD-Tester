@@ -11,6 +11,8 @@
 void drawLine(int x, int y, int thickness, int angle, int length, int8_t grid[][yres]){
     //Calculate end points according to the angle and length. (Right angled triangle)
     //
+    if(x<0 || y <0 || x > xres || y > yres)
+      return;
     
     int A = 0;
     int B = 0;
@@ -23,13 +25,14 @@ void drawLine(int x, int y, int thickness, int angle, int length, int8_t grid[][
 
     plotLine(x,y,x+B,y-A,grid);
     
-    //plotline: for loop for thickness
-    
-    //TODO: out of bounds catch
+    //TODO: line thickness
     
 }
 
 void drawPoint(int x, int y, int thickness,int8_t grid[][yres]) {
+    
+  if(x<0 || y <0 || x > xres || y > yres)
+      return;
     
     for(int ix=x;ix<x+thickness;ix++) {
         for(int iy=y;iy<y+thickness;iy++) {
@@ -57,7 +60,7 @@ void plotLine(int x0, int y0, int x1, int y1,int8_t grid[][yres]) {
 
 void setPixel(int8_t grid[][yres], int x, int y) {
     //TODO: set pixel colour
-	grid[x][y]=1;
+  grid[x][y]=1;
 }
 
 //Calculate two sides of a right angled traingle given one length and one angle
@@ -66,16 +69,13 @@ void calcTriangleSides(int * A, int * B, int * C, int * AB, int * AC, int * BC) 
     
     // Sin(BC) = A / C
     float sinBC = sinf((float)*BC*PI/180);
-    *A = *C / sinBC;
+    *A = *C * sinBC;
     
     // Cos(BC) = B / C
-	float cosBC = cosf((float)*BC*PI/180);
-    *B = *C /cosBC;
+  float cosBC = cosf((float)*BC*PI/180);
+    *B = *C * cosBC;
     
     //soscastoa hier
     //http://www.wiskunde.net/sinus#.U9OZQ_l_uxb
     //http://wetenschap.infonu.nl/wiskunde/84556-de-lengte-van-een-zijde-van-een-driehoek-berekenen.html
 }
-    
-    
-    
