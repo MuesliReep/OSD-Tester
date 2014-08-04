@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "Config.h"
 #include "Telemetry.h"
@@ -13,8 +14,9 @@ void updateOSD(int8_t grid[][yres], struct TelemetryData * data) {
     //Display craft attitude information
     drawAttitude(grid, &data->attitude);
     
+    //Display compass/radar
+    drawCompassRadar(grid,&data->position);
     
-    //showCompasRadar();
     //showGPS
 }
 
@@ -71,7 +73,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
 
     drawLine(leftX,leftY,t,angle +180, l, grid);
 
-    //Draw pitch positive steps
+    //Draw pitch ladder steps
 
     //Calculate angle from horizon
     angle += 90; //90 degrees from horizon
@@ -96,7 +98,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
     int AstepEnd = A; int BstepEnd = B;
 
-    //For each positive pitch step draw a line
+    //For each positive pitch ladder step draw a line
     int pitchSteps = 180 / vStepSize;
     int lastRX = rightX; int lastRY = rightY;
     int lastLX = leftX;  int lastLY = leftY;
@@ -120,7 +122,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
         //TODO: Draw pitch number
     }
 
-    //For each negative pitch step draw a line
+    //For each negative pitch ladder step draw a line
     lastRX = rightX; lastRY = rightY;
     lastLX = leftX;  lastLY = leftY;
     for(int x=0;x < pitchSteps; x++) {
@@ -140,9 +142,77 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
         //For each pitch step draw a line towards horizon
         drawLine(lastRX,lastRY,t,angle,l/4,grid);
         drawLine(lastLX,lastLY,t,angle,l/4,grid);
-        
+
         //TODO: Draw pitch number
     }
+}
+
+void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
+
+    int edgeDistance = 10; //Distance to edge of the screen. (Should be in config)
+    
+    //Calculate compass center position
+    int centerX = xres - edgeDistance - compassRadius;
+    int centerY = 0 + edgeDistance + compassRadius;
+
+    //Draw outer ring
+    plotCircle(centerX, centerY, compassRadius, grid);
+
+    //Draw inner ring
+    plotCircle(centerX, centerY, compassRadius/2, grid);
+
+    //Draw compass notches
+    //Calculate angle to north first
+    int angle = 90 - position->heading;
+    int A = 0;
+    int B = 0;
+    int C = compassRadius-5; 
+    int AB = 90;
+    int AC = 180-AB-angle;
+    int BC = angle;
+
+    calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
 
 
+    //Draw every notch
+    int notches     = 4;
+    int notchStep   = 90;
+#ifdef compassSubNotch
+    bool subNotch = true;
+    notches     *= 2;
+    notchStep   *= 2;
+#endif
+    for(int x=0; x<notches; x++) {
+        
+        int notchLength = 10;
+#ifdef compassSubNotch
+        if(subNotch == true)
+            notchLength /= 2;
+#endif
+        angle += notchStep;
+        A = 0;
+        B = 0;
+        AC = 180-AB-angle;
+        BC = angle;
+        calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
+
+        drawLine(centerX+B,centerY-A,1,angle,notchLength,grid);
+
+#ifdef compassSubNotch
+        if(subNotch == true)
+            subNotch = false;
+        else
+            subNotch = true;
+#endif
+    }
+
+    
+
+#ifdef compassViewAngle
+    int viewAngle = 90; //TODO: in config based on camera
+
+    drawLine(centerX, centerY, 1, 90-viewAngle/2, compassRadius, grid);
+    drawLine(centerX, centerY, 1, 90+viewAngle/2, compassRadius, grid);
+
+#endif
 }

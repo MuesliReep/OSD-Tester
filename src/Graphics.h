@@ -4,6 +4,7 @@
 void drawLine(int x, int y, int thickness, int angle, int length, int8_t grid[][yres]);
 void drawPoint(int x, int y, int thickness,int8_t grid[][yres]);
 void plotLine(int x0, int y0, int x1, int y1,int8_t grid[][yres]);
+void plotCircle(int xm, int ym, int r,int8_t grid[][yres]);
 void setPixel(int8_t grid[][yres], int x, int y);
 void calcTriangleSides(int * A, int * B, int * C, int * AB, int * AC, int * BC);
 

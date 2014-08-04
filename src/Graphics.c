@@ -58,8 +58,23 @@ void plotLine(int x0, int y0, int x1, int y1,int8_t grid[][yres]) {
    }
 }
 
+void plotCircle(int xm, int ym, int r,int8_t grid[][yres]) {
+
+   int x = -r, y = 0, err = 2-2*r; /* II. Quadrant */ 
+   do {
+      setPixel(grid,xm-x, ym+y); /*   I. Quadrant */
+      setPixel(grid,xm-y, ym-x); /*  II. Quadrant */
+      setPixel(grid,xm+x, ym-y); /* III. Quadrant */
+      setPixel(grid,xm+y, ym+x); /*  IV. Quadrant */
+      r = err;
+      if (r <= y) err += ++y*2+1;           /* e_xy+e_y < 0 */
+      if (r > x || err > y) err += ++x*2+1; /* e_xy+e_x > 0 or no 2nd y-step */
+   } while (x < 0);
+}
+
 void setPixel(int8_t grid[][yres], int x, int y) {
-    //TODO: set pixel colour
+
+  //TODO: set pixel colour
   grid[x][y]=1;
 }
 
@@ -79,3 +94,6 @@ void calcTriangleSides(int * A, int * B, int * C, int * AB, int * AC, int * BC) 
     //http://www.wiskunde.net/sinus#.U9OZQ_l_uxb
     //http://wetenschap.infonu.nl/wiskunde/84556-de-lengte-van-een-zijde-van-een-driehoek-berekenen.html
 }
+    
+    
+    

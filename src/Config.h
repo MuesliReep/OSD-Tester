@@ -7,5 +7,10 @@
 #define vSteps 		45
 #define vStepSize	10
 
+//Compass/Radar options:
+#define compassRadius 35
+#define compassViewAngle 1
+//#define compassSubNotch
+
 //Graphics options:
 #define lineThickness 2
