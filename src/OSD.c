@@ -10,31 +10,38 @@
 
 
 void updateOSD(int8_t grid[][yres], struct TelemetryData * data) {
-    
+
+    //Init graphics
+    initialiseGraphics();
+
     //Display craft attitude information
     drawAttitude(grid, &data->attitude);
-    
+
     //Display compass/radar
     drawCompassRadar(grid,&data->position);
-    
+
     //showGPS
+
+    //Test font drawing
+    drawCharacter(xres+xres/2,yres,1,135,grid);
+
 }
 
 void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
-    
+
     int t = lineThickness; //Thickness -> should be in user config
     int l = 30; //Horizon line length
-    
+
     //Draw craft center
     drawPoint(xres/2,yres/2,t,grid);
-    
+
 	//Left
     drawPoint(xres/2-t,yres/2+t,t,grid);
     drawPoint(xres/2-t*2,yres/2+t*2,t,grid);
-    drawPoint(xres/2-t*3,yres/2+t,t,grid);  
+    drawPoint(xres/2-t*3,yres/2+t,t,grid);
     drawPoint(xres/2-t*4,yres/2,t,grid);
     drawPoint(xres/2-t*5,yres/2,t,grid);
-    
+
     //Right
     drawPoint(xres/2+t,yres/2+t,t,grid);
     drawPoint(xres/2+t*2,yres/2+t*2,t,grid);
@@ -44,8 +51,8 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     //End craft center
 
 	//Draw horizon
-	
-    //Find left and right sides of horizon   
+
+    //Find left and right sides of horizon
     int angle = attitude->roll;
     int A = 0;
     int B = 0;
@@ -53,7 +60,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     int AB = 90;
     int AC = 180-AB-angle;
     int BC = angle;
-    
+
     calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
 
     //Adjust for pitch angle
@@ -63,9 +70,9 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     //Draw right horizon
     int rightX = xres /2 + B;
     int rightY = yres /2 - A + pitch;
-    
+
     drawLine(rightX,rightY,t,angle, l, grid);
-    
+
     //Draw left horizon
     //Flip right side to get left side
     int leftX = xres /2 - B;
@@ -103,7 +110,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     int lastRX = rightX; int lastRY = rightY;
     int lastLX = leftX;  int lastLY = leftY;
     for(int x=0;x < pitchSteps; x++) {
-        
+
         //Draw right
         lastRX += Bstep;
         lastRY -= Astep;
@@ -150,7 +157,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
 void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
 
     int edgeDistance = 10; //Distance to edge of the screen. (Should be in config)
-    
+
     //Calculate compass center position
     int centerX = xres - edgeDistance - compassRadius;
     int centerY = 0 + edgeDistance + compassRadius;
@@ -166,25 +173,24 @@ void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
     int angle = 90 - position->heading;
     int A = 0;
     int B = 0;
-    int C = compassRadius-5; 
+    int C = compassRadius-5;
     int AB = 90;
     int AC = 180-AB-angle;
     int BC = angle;
 
     calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
 
-
     //Draw every notch
     int notches     = 4;
-    int notchStep   = 90;
+    int notchStep   = 360/notches;
 #ifdef compassSubNotch
     bool subNotch = true;
     notches     *= 2;
     notchStep   *= 2;
 #endif
     for(int x=0; x<notches; x++) {
-        
-        int notchLength = 10;
+
+        int notchLength = 5;
 #ifdef compassSubNotch
         if(subNotch == true)
             notchLength /= 2;
@@ -205,8 +211,6 @@ void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
             subNotch = true;
 #endif
     }
-
-    
 
 #ifdef compassViewAngle
     int viewAngle = 90; //TODO: in config based on camera
