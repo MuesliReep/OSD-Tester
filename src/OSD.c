@@ -20,11 +20,15 @@ void updateOSD(int8_t grid[][yres], struct TelemetryData * data) {
     //Display compass/radar
     drawCompassRadar(grid,&data->position);
 
-    //showGPS
+
 
     //Test font drawing
     drawCharacter(xres+xres/2,yres,1,135,grid);
 
+    //showGPS
+    //showBattery
+    //showFlightTime
+    //showRSSI
 }
 
 void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
@@ -111,20 +115,30 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     int lastLX = leftX;  int lastLY = leftY;
     for(int x=0;x < pitchSteps; x++) {
 
-        //Draw right
+        //Draw right side
         lastRX += Bstep;
         lastRY -= Astep;
         drawLine(lastRX,lastRY,t,angle-90,l,grid);
 
-        //Draw left
+        //Draw left side
         lastLX += Bstep;
         lastLY -= Astep;
         drawLine(lastLX,lastLY,t,angle+90,l,grid);
         //drawPoint(lastLX,lastLY,1,grid);
 
-        //For each pitch step draw a line towards horizon
+        //For each pitch ladder step draw a line towards horizon
         drawLine(lastRX+BstepEnd,lastRY-AstepEnd,t,angle-180,l/4,grid);
         drawLine(lastLX-BstepEnd,lastLY+AstepEnd,t,angle-180,l/4,grid);
+
+        //For each pitch ladder step draw the number of degrees next to it
+        char buffer[4];
+        snprintf (buffer,4,"%d",x*vStepSize);
+
+        memset buffer to -1;
+
+        //Determine the location
+        //Draw the pitch ladder angle
+        drawString(BstepEnd,AstepEnd,1,buffer,4,grid);
 
         //TODO: Draw pitch number
     }
@@ -134,21 +148,23 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     lastLX = leftX;  lastLY = leftY;
     for(int x=0;x < pitchSteps; x++) {
 
-        //Draw right
+        //Draw right side
         lastRX -= Bstep;
         lastRY += Astep;
         drawLine(lastRX,lastRY,t,angle-90,l/3,grid);
         drawLine(lastRX+BstepEnd,lastRY-AstepEnd,t,angle+90,l/3,grid);
 
-        //Draw left
+        //Draw left side
         lastLX -= Bstep;
         lastLY += Astep;
         drawLine(lastLX,lastLY,t,angle+90,l/3,grid);
         drawLine(lastLX-BstepEnd,lastLY+AstepEnd,t,angle-90,l/3,grid);
 
-        //For each pitch step draw a line towards horizon
+        //For each pitch ladder step draw a line towards horizon
         drawLine(lastRX,lastRY,t,angle,l/4,grid);
         drawLine(lastLX,lastLY,t,angle,l/4,grid);
+
+        //For each pitch ladder step draw the number of degrees
 
         //TODO: Draw pitch number
     }

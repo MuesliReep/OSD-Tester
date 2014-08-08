@@ -95,7 +95,35 @@ void drawCharacter(int cenX, int cenY, int size, int character, int8_t grid[][yr
         x+=2;
 
     }
+}
 
+void drawString(int posX, int posY, int size, char text[], int length, int8_t grid[][yres]) {
+    //Non rotated string
+
+    int previousCharWidth = -1;
+    int currentCharWidth;
+
+    for (int i=0;i<length;i++) {
+
+        //Convert char to ascii code
+        int asciiChar = (int)text[i];
+
+        //Find the current characters width
+        currentCharWidth = font_simplex[asciiChar-32][2];
+
+        //Check if this is the first character to be drawn
+        if(previousCharWidth == -1) {
+            previousCharWidth = currentCharWidth;
+
+            drawCharacter(posX,posY,size,asciiChar,grid);
+            continue;
+        }
+
+        //Find characters position
+        posX += previousCharWidth /2 + currentCharWidth /2;
+
+        drawCharacter(posX,posY,size,asciiChar,grid);
+    }
 }
 
 //http://members.chello.at/~easyfilter/bresenham.html
