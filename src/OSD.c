@@ -236,3 +236,17 @@ void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
 
 #endif
 }
+
+void drawBatteryInfo(int8_t grid[][yres], struct Battery * battery) {
+
+    char buffer[5];
+
+    //TODO: convert voltage to float then to char, eg: 127 = 12.7v
+
+    buffer[0] = "1";
+    buffer[1] = "2";
+
+    drawString(battPosX,battPosY,1,buffer,5,grid);
+
+    //TODO: calculate mah usage to find battery percentage
+}

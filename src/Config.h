@@ -14,3 +14,7 @@
 
 //Graphics options:
 #define lineThickness 2
+
+//Battery options
+#define battPosX 20
+#define battPosY 360
