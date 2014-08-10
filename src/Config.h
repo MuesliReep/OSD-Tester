@@ -18,3 +18,7 @@
 //Battery options
 #define battPosX 20
 #define battPosY 360
+
+//GPS options
+#define positionPosX 20
+#define positionPosY 20

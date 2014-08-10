@@ -15,7 +15,9 @@ void zeroData(struct TelemetryData *telemetryData) {
     telemetryData->attitude.yaw		= 0;
 
     //Zero Position data
-		telemetryData->position.heading	= 0;
+		telemetryData->position.heading		= 0;
+		telemetryData->position.latitude 	= 0;
+		telemetryData->position.longitude	= 0;
 
 		//Zero Battery data
 		telemetryData->battery.voltage 	= 127;

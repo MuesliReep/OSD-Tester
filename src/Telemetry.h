@@ -10,7 +10,8 @@ struct Attitude {
 
 struct Position {
   int16_t heading;
-
+  int32_t latitude;
+  int32_t longitude;
 };
 
 struct Battery {

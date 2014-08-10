@@ -250,3 +250,21 @@ void drawBatteryInfo(int8_t grid[][yres], struct Battery * battery) {
 
     //TODO: calculate mah usage to find battery percentage
 }
+
+void drawGPSCoordinates(int8_t grid[][yres], struct Position * position) {
+
+  //convert int32 to float
+  float latitude = (float)position.latitude;
+  float longitude = (float)position.longitude;
+
+  char buffer[10];
+  //TODO: fill buffer with lat data
+
+  //Draw latitude coordinate
+  drawString(positionPosX,positionPosY,1,buffer,10,grid);
+
+  //TODO: fill buffer with long data
+
+  //Draw longitude coordinate
+  drawString(positionPosX+20,positionPosY,1,buffer,10,grid);
+}
