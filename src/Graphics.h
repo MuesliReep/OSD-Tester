@@ -9,6 +9,9 @@ void drawString(int posX, int posY, int size, char text[], int length, int8_t gr
 void plotLine(int x0, int y0, int x1, int y1,int8_t grid[][yres]);
 void plotCircle(int xm, int ym, int r,int8_t grid[][yres]);
 void setPixel(int8_t grid[][yres], int x, int y);
-void calcTriangleSides(int * A, int * B, int * C, int * AB, int * AC, int * BC);
+void calcTriangleSides_float(float * A, float * B, float * C, float * AB, float * AC, float * BC);
+void calcTriangleSides_int(int * A, int * B, int * C, int * AB, int * AC, int * BC);
+void calcTriangleAngle_float(float * A, float * B, float * C, float * AB, float * AC, float * BC);
+int round_int( float r );
 
 #endif /* GRAPHICS_H_ */

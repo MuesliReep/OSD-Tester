@@ -65,7 +65,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     int AC = 180-AB-angle;
     int BC = angle;
 
-    calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
+    calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
 
     //Adjust for pitch angle
     int offset = yres / vSteps;
@@ -95,7 +95,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     AC = 180 - AB - angle;
     BC = angle;
 
-    calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
+    calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
     int Astep = A; int Bstep = B;
 
     //Calculate pitch step end
@@ -106,7 +106,7 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     AC = 180 - AB - (angle-90);
     BC = angle - 90;
 
-    calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
+    calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
     int AstepEnd = A; int BstepEnd = B;
 
     //For each positive pitch ladder step draw a line
@@ -194,7 +194,7 @@ void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
     int AC = 180-AB-angle;
     int BC = angle;
 
-    calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
+    calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
 
     //Draw every notch
     int notches     = 4;
@@ -216,7 +216,7 @@ void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
         B = 0;
         AC = 180-AB-angle;
         BC = angle;
-        calcTriangleSides(&A,&B,&C,&AB,&AC,&BC);
+        calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
 
         drawLine(centerX+B,centerY-A,1,angle,notchLength,grid);
 
