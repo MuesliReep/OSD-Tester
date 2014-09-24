@@ -23,7 +23,7 @@ void updateOSD(int8_t grid[][yres], struct TelemetryData * data) {
 
 
     //Test font drawing
-    drawCharacter(xres+xres/2,yres,1,135,grid);
+    drawCharacter(xres+xres/2,yres,1,0,135,grid);
 
     //showGPS
     //showBattery
@@ -134,11 +134,11 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
         char buffer[4];
         snprintf (buffer,4,"%d",x*vStepSize);
 
-        memset buffer to -1;
+        //memset buffer to -1;
 
         //Determine the location
         //Draw the pitch ladder angle
-        drawString(BstepEnd,AstepEnd,1,buffer,4,grid);
+        drawString(BstepEnd,AstepEnd,1,angle,buffer,4,grid);
 
         //TODO: Draw pitch number
     }
@@ -243,10 +243,10 @@ void drawBatteryInfo(int8_t grid[][yres], struct Battery * battery) {
 
     //TODO: convert voltage to float then to char, eg: 127 = 12.7v
 
-    buffer[0] = "1";
-    buffer[1] = "2";
+    buffer[0] = (int)"1";
+    buffer[1] = (int)"2";
 
-    drawString(battPosX,battPosY,1,buffer,5,grid);
+    drawString(battPosX,battPosY,1,0,buffer,5,grid);
 
     //TODO: calculate mah usage to find battery percentage
 }
@@ -254,17 +254,17 @@ void drawBatteryInfo(int8_t grid[][yres], struct Battery * battery) {
 void drawGPSCoordinates(int8_t grid[][yres], struct Position * position) {
 
   //convert int32 to float
-  float latitude = (float)position.latitude;
-  float longitude = (float)position.longitude;
+  float latitude = (float)position->latitude;
+  float longitude = (float)position->longitude;
 
   char buffer[10];
   //TODO: fill buffer with lat data
 
   //Draw latitude coordinate
-  drawString(positionPosX,positionPosY,1,buffer,10,grid);
+  drawString(positionPosX,positionPosY,1,0,buffer,10,grid);
 
   //TODO: fill buffer with long data
 
   //Draw longitude coordinate
-  drawString(positionPosX+20,positionPosY,1,buffer,10,grid);
+  drawString(positionPosX+20,positionPosY,1,0,buffer,10,grid);
 }
