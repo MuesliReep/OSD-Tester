@@ -4,8 +4,8 @@
 #define yres  384
 
 //Artificial Horizon options:
-#define vSteps 		45
-#define vStepSize	10
+#define vSteps 		45 //The number of degrees to be shown vertically
+#define vStepSize	10 //How big each ladder step should be
 
 //Compass/Radar options:
 #define compassRadius 35
@@ -21,4 +21,4 @@
 
 //GPS options
 #define positionPosX 20
-#define positionPosY 20
+#define positionPosY yres -40
