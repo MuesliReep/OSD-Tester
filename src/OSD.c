@@ -20,28 +20,26 @@ void updateOSD(int8_t grid[][yres], struct TelemetryData * data) {
     //Display compass/radar
     drawCompassRadar(grid,&data->position);
 
-    //Display GPS coordinates
-    drawGPSCoordinates(grid,&data->position);
 
-    char buffer[3];
-    snprintf (buffer,4,"%d",data->attitude.pitch);
-    drawString(20,20,5,0,buffer,3,grid);
 
+    //Test font drawing
+    drawCharacter(xres+xres/2,yres,1,0,135,grid);
+
+    //showGPS
     //showBattery
     //showFlightTime
     //showRSSI
 }
 
 void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
-    //TODO: these variables should be in the config file
+
     int t = lineThickness; //Thickness -> should be in user config
     int l = 30; //Horizon line length
 
-    //TODO: Craft center should be a vector
-    //Start with drawing the craft center
+    //Draw craft center
     drawPoint(xres/2,yres/2,t,grid);
 
-    //Left
+	//Left
     drawPoint(xres/2-t,yres/2+t,t,grid);
     drawPoint(xres/2-t*2,yres/2+t*2,t,grid);
     drawPoint(xres/2-t*3,yres/2+t,t,grid);
@@ -56,10 +54,9 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
     drawPoint(xres/2+t*5,yres/2,t,grid);
     //End craft center
 
-    //Now draw the horizon
-    //First we find the base starting point of the right side of the horizon
-    //which will be rotated by the crafts roll
+	//Draw horizon
 
+    //Find left and right sides of horizon
     int angle = attitude->roll;
     int A = 0;
     int B = 0;
@@ -70,95 +67,83 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
 
     calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
 
-    int baseX = B;
-    int baseY = A;
+    //Adjust for pitch angle
+    int offset = yres / vSteps;
+    int pitch = attitude->pitch * offset;
 
-    //Next we must find the offset due to pitch angle
-    int pitchMX = yres / vSteps; //Pitch multiplier(Number of pixels per pitch angle degree)
+    //Draw right horizon
+    int rightX = xres /2 + B;
+    int rightY = yres /2 - A + pitch;
 
-    angle = attitude->roll + 90;
+    drawLine(rightX,rightY,t,angle, l, grid);
+
+    //Draw left horizon
+    //Flip right side to get left side
+    int leftX = xres /2 - B;
+    int leftY = yres /2 + A + pitch;
+
+    drawLine(leftX,leftY,t,angle +180, l, grid);
+
+    //Draw pitch ladder steps
+
+    //Calculate angle from horizon
+    angle += 90; //90 degrees from horizon
     A = 0;
     B = 0;
-    C = pitchMX * attitude->pitch;
+    C = offset * vStepSize;
     AB = 90;
-    AC = 180-AB-angle;
-    BC = angle;
-
-    calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
-
-    int horizonOffsetX = B;
-    int horizonOffsetY = A;
-
-    //The horizon can now be drawn
-    int rightX = xres /2 + baseX - horizonOffsetX;
-    int rightY = yres /2 - baseY + horizonOffsetY;
-
-    drawLine(rightX,rightY,t,attitude->roll, l*2, grid);
-    //Flip the values to draw the left side
-    int leftX = xres /2 - baseX - horizonOffsetX;
-    int leftY = yres /2 + baseY + horizonOffsetY;
-
-    drawLine(leftX,leftY,t,attitude->roll + 180, l*2, grid);
-
-    //Next we will calculate the positive pitch ladder steps
-    //First the distance between the ladder steps needs to be calculated
-
-    angle = attitude->roll + 90;
-    A = 0;
-    B = 0;
-    C = pitchMX * vStepSize;
-    AB = 90;
-    AC = 180-AB-angle;
+    AC = 180 - AB - angle;
     BC = angle;
 
     calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
     int Astep = A; int Bstep = B;
 
-    //Calculate the end point of the ladder step
-    angle = attitude->roll;
+    //Calculate pitch step end
     A = 0;
     B = 0;
     C = l;
     AB = 90;
-    AC = 180-AB-angle;
-    BC = angle;
+    AC = 180 - AB - (angle-90);
+    BC = angle - 90;
 
     calcTriangleSides_int(&A,&B,&C,&AB,&AC,&BC);
     int AstepEnd = A; int BstepEnd = B;
 
     //For each positive pitch ladder step draw a line
-    int pitchSteps = 180 / vStepSize; //Calculate the number of ladder steps
-    int lastRX = rightX; int lastRY = rightY; //These variables are used to store the last ladder step position
+    int pitchSteps = 180 / vStepSize;
+    int lastRX = rightX; int lastRY = rightY;
     int lastLX = leftX;  int lastLY = leftY;
     for(int x=0;x < pitchSteps; x++) {
+
         //Draw right side
         lastRX += Bstep;
         lastRY -= Astep;
-        drawLine(lastRX,lastRY,t,attitude->roll,l,grid);
+        drawLine(lastRX,lastRY,t,angle-90,l,grid);
 
         //Draw left side
         lastLX += Bstep;
         lastLY -= Astep;
-        drawLine(lastLX,lastLY,t,attitude->roll+180,l,grid);
+        drawLine(lastLX,lastLY,t,angle+90,l,grid);
         //drawPoint(lastLX,lastLY,1,grid);
 
         //For each pitch ladder step draw a line towards horizon
-        drawLine(lastRX+BstepEnd,lastRY-AstepEnd,t,attitude->roll-90,l/4,grid);
-        drawLine(lastLX-BstepEnd,lastLY+AstepEnd,t,attitude->roll-90,l/4,grid);
+        drawLine(lastRX+BstepEnd,lastRY-AstepEnd,t,angle-180,l/4,grid);
+        drawLine(lastLX-BstepEnd,lastLY+AstepEnd,t,angle-180,l/4,grid);
 
         //For each pitch ladder step draw the number of degrees next to it
         char buffer[4];
-        snprintf (buffer,5,"%d",x*vStepSize);
-        drawString(lastRX+BstepEnd,lastRY-AstepEnd,4,0,buffer,4,grid);
+        snprintf (buffer,4,"%d",x*vStepSize);
 
-        //TODO: memset buffer to -1
-        //TODO: beter align the text to the pitch ladder step
-        //TODO: option to rotate the text
         //memset buffer to -1;
+
+        //Determine the location
+        //Draw the pitch ladder angle
+        drawString(BstepEnd,AstepEnd,1,angle,buffer,4,grid);
+
+        //TODO: Draw pitch number
     }
 
-
-    //Finally calculate the negative pitch ladder steps
+    //For each negative pitch ladder step draw a line
     lastRX = rightX; lastRY = rightY;
     lastLX = leftX;  lastLY = leftY;
     for(int x=0;x < pitchSteps; x++) {
@@ -166,25 +151,23 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
         //Draw right side
         lastRX -= Bstep;
         lastRY += Astep;
-        drawLine(lastRX,lastRY,t,attitude->roll,l/3,grid);
-        drawLine(lastRX+BstepEnd,lastRY-AstepEnd,t,attitude->roll,l/3,grid);
+        drawLine(lastRX,lastRY,t,angle-90,l/3,grid);
+        drawLine(lastRX+BstepEnd,lastRY-AstepEnd,t,angle+90,l/3,grid);
 
         //Draw left side
         lastLX -= Bstep;
         lastLY += Astep;
-        drawLine(lastLX,lastLY,t,attitude->roll+180,l/3,grid);
-        drawLine(lastLX-BstepEnd,lastLY+AstepEnd,t,attitude->roll+180,l/3,grid);
+        drawLine(lastLX,lastLY,t,angle+90,l/3,grid);
+        drawLine(lastLX-BstepEnd,lastLY+AstepEnd,t,angle-90,l/3,grid);
 
         //For each pitch ladder step draw a line towards horizon
-        drawLine(lastRX,lastRY,t,attitude->roll+90,l/4,grid);
-        drawLine(lastLX,lastLY,t,attitude->roll+90,l/4,grid);
+        drawLine(lastRX,lastRY,t,angle,l/4,grid);
+        drawLine(lastLX,lastLY,t,angle,l/4,grid);
 
         //For each pitch ladder step draw the number of degrees
-        char buffer[4];
-        snprintf (buffer,5,"%d",x*vStepSize);
-        drawString(lastRX+BstepEnd,lastRY-AstepEnd,4,0,buffer,4,grid);
-    }
 
+        //TODO: Draw pitch number
+    }
 }
 
 void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
@@ -275,14 +258,13 @@ void drawGPSCoordinates(int8_t grid[][yres], struct Position * position) {
   float longitude = (float)position->longitude;
 
   char buffer[10];
-  snprintf (buffer,10,"%f",latitude);
   //TODO: fill buffer with lat data
 
   //Draw latitude coordinate
-  drawString(positionPosX,positionPosY,5,0,buffer,10,grid);
+  drawString(positionPosX,positionPosY,1,0,buffer,10,grid);
 
   //TODO: fill buffer with long data
 
   //Draw longitude coordinate
-  drawString(positionPosX,positionPosY+20,5,0,buffer,10,grid);
+  drawString(positionPosX+20,positionPosY,1,0,buffer,10,grid);
 }

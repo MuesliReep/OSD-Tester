@@ -27,21 +27,15 @@ int main() {
     struct TelemetryData telemetryData;
     zeroData(&telemetryData);
 
-		int run = -1;
-		while(run == -1) {
 
-	    //Grab latest data & convert it to TelemetryData
-			processStream(&telemetryData);
+    //Grab latest data & convert it to TelemetryData
 
-	    //OSD
-			updateOSD(displayGrid, &telemetryData);
 
-			//Display OSD to display device
-	    run = outputGridToDisplay(displayGrid);
+    //OSD
+		updateOSD(displayGrid, &telemetryData);
 
-			//Clear the output array
-			clearArray(displayGrid,sizeof(displayGrid));
-		}
+		//Display OSD to display device
+    outputGridToDisplay(displayGrid);
 
     //Cleanup
 		outputDestroy();
