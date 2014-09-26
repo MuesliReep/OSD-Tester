@@ -237,6 +237,9 @@ void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
 
         drawLine(centerX+B,centerY-A,1,angle,notchLength,grid);
 
+        //TODO: Draw compass letters
+        //drawCharacter(centerX+B, centerY-A, 4, 0, 78, grid);
+
 #ifdef compassSubNotch
         if(subNotch == true)
             subNotch = false;

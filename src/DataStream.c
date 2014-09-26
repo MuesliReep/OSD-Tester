@@ -33,5 +33,9 @@ int processStream(struct TelemetryData *data) {
 
     data->position.latitude++;
 
+    data->position.heading++;
+    if(data->position.heading>360)
+      data->position.heading = 0;
+
     return 0;
 }
