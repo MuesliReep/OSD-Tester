@@ -12,6 +12,7 @@
 #include "output.h"
 
 int outputDevice = 0;
+IplImage* img;
 
 int outputGridToDisplay(int8_t grid[][yres]) {
 	switch(outputDevice) {
@@ -19,7 +20,7 @@ int outputGridToDisplay(int8_t grid[][yres]) {
         	outputToConsole(grid);
         break;
         case 1:
-        	outputToWindow(grid);
+        	return outputToWindow(grid);
         break;
         default:
         	return -1;
@@ -30,12 +31,14 @@ int outputGridToDisplay(int8_t grid[][yres]) {
 
 int outputInitialise(int device) {
     outputDevice = device;
-    
+
     if(outputDevice == 1){
+				//Create image
+
         //Open window, set size etc.
         cvNamedWindow( "OSD", CV_WINDOW_AUTOSIZE );
     }
-    
+
     return 0;
 }
 
@@ -45,6 +48,7 @@ int outputDestroy() {
         break;
         case 1:
         	cvDestroyWindow( "OSD" );
+
         break;
         default:
         	return -1;
@@ -53,14 +57,16 @@ int outputDestroy() {
     return 0;
 }
 
-void outputToWindow(int8_t grid[][yres]) {
-    
-    //Create image from grid
-	IplImage* img = cvCreateImage(cvSize(xres, yres), IPL_DEPTH_8U, 3);
-    
+int outputToWindow(int8_t grid[][yres]) {
+	//Release the old frame, we dont want a memory leak!
+	cvReleaseImage( &img );
+
+	//Create image from grid
+	img = cvCreateImage(cvSize(xres, yres), IPL_DEPTH_8U, 3);
+
     for(int x=0; x<xres; x++){
     	for(int y=0; y<yres;y++){
-            
+
             switch(grid[x][y]) {
                 case 0:
                 	img->imageData[3*(y*img->width+x)+0] = 0;
@@ -79,12 +85,11 @@ void outputToWindow(int8_t grid[][yres]) {
             }
         }
     }
-        
+
     //Show image in the previously created window
     cvShowImage("OSD", img);
     cvResizeWindow("OSD",xres,yres);
-    cvWaitKey(0);
-    cvReleaseImage( &img );
+    return cvWaitKey(40);
 }
 
 void outputToConsole(int8_t grid[][yres]) {
