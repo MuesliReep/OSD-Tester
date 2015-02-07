@@ -70,13 +70,13 @@ int outputToWindow(int8_t grid[][yres]) {
             switch(grid[x][y]) {
                 case 0:
                 	img->imageData[3*(y*img->width+x)+0] = 0;
-            		img->imageData[3*(y*img->width+x)+1] = 0;
-            		img->imageData[3*(y*img->width+x)+2] = 0;
+            			img->imageData[3*(y*img->width+x)+1] = 0;
+            			img->imageData[3*(y*img->width+x)+2] = 0;
                 break;
                 case 1:
                 	img->imageData[3*(y*img->width+x)+0] = 255;
-            		img->imageData[3*(y*img->width+x)+1] = 255;
-            		img->imageData[3*(y*img->width+x)+2] = 255;
+            			img->imageData[3*(y*img->width+x)+1] = 255;
+            			img->imageData[3*(y*img->width+x)+2] = 255;
                 break;
                 case -1:
                 break;

@@ -152,9 +152,8 @@ void drawAttitude(int8_t grid[][yres], struct Attitude * attitude) {
         drawString(lastRX+BstepEnd,lastRY-AstepEnd,4,0,buffer,4,grid);
 
         //TODO: memset buffer to -1
-        //TODO: beter align the text to the pitch ladder step
-        //TODO: option to rotate the text
-        //memset buffer to -1;
+        //TODO: Improve text alignment with the pitch ladder step
+        //TODO: Add option to rotate the text
     }
 
 
@@ -255,6 +254,10 @@ void drawCompassRadar(int8_t grid[][yres], struct Position * position) {
     drawLine(centerX, centerY, 1, 90+viewAngle/2, compassRadius, grid);
 
 #endif
+
+    //TODO: make heading optional
+    //Display the current heading
+    //TODO: Draw below compass circle plus height of font in center. Will need new graphics functions
 }
 
 void drawBatteryInfo(int8_t grid[][yres], struct Battery * battery) {

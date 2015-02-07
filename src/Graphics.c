@@ -262,6 +262,16 @@ void plotCircle(int xm, int ym, int r,int8_t grid[][yres]) {
    } while (x < 0);
 }
 
+//Plots an anti aliased line
+void plotLineAA(int x0, int y0, int x1, int y1,int8_t grid[][yres]) {
+
+}
+
+//Plots an anti aliased circle
+void plotCircleAA(int xm, int ym, int r,int8_t grid[][yres]) {
+
+}
+
 //Sets the pixel value for a given x & y coordinate
 void setPixel(int8_t grid[][yres], int x, int y) {
 
@@ -270,6 +280,11 @@ void setPixel(int8_t grid[][yres], int x, int y) {
 
     //TODO: set pixel colour
     grid[x][y]=1;
+}
+
+//Sets the pixel value for a given x & y coordinate with a given intensity
+void setPixelAA(int8_t grid[][yres], int x, int y, int intensity) {
+
 }
 
 //Calculate two sides of a right angled traingle given one length and one angle
